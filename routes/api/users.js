@@ -15,17 +15,19 @@ const User = require("../../models/User");
 //@desc Register user
 //@access Public
 router.post("/register", (req,res) => {
+  console.log(req.body);
   //Form validation
   const { errors, isValid } = validateRegisterInput(req.body);
 
   //Check Validation
   if (!isValid) {
+    console.log(errors);
     return res.status(400).json(errors);
   }
 
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
-      return res.status(400).json({email: "Email already exisits"});
+      return res.status(400).json({email: "Email already exists"});
     }
 
     const newUser = new User({
@@ -60,17 +62,19 @@ router.post("/login", (req, res) => {
   //Form validation
   const { errors, isValid } = validateLoginInput(req.body);
 
+  console.log(isValid);
+
   //Check Validations
   if (!isValid) {
-    console.log(req.body);
     return res.status(400).json(errors);
   }
 
   const email = req.body.email;
-    const password = req.body.password;
+  const password = req.body.password;
 
   //Find user by Email
   User.findOne({ email }).then(user => {
+    console.log(user);
     //Check if user exists
     if (!user) {
       return res.status(404).json({ emailnotfound: "Email not found"});
